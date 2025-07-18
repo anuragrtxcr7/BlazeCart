@@ -44,7 +44,12 @@ else
                                     @obj.Name
                                 </td>
                                 <td>
-                                    
+                                    <a href="@($"category/update/{obj.Id}")" class="btn btn-primary">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+                                    <button class="btn btn-danger">
+                                        <i class="bi bi-trash3"></i> Delete
+                                    </button>
                                 </td>
                             </tr>
                         }
@@ -56,23 +61,17 @@ else
 }
 
 @code {
-    private bool isProcessing { get; set; } = false;
+    private bool isProcessing { get; set; } = true;
     private IEnumerable<Category> Categories { get; set; } = new List<Category>();
 
     protected override async Task OnInitializedAsync()
     {
-        // Simulate a delay for processing
-        isProcessing = true;
-
-        await Task.Delay(2000);
-        LoadCategories();
+        await LoadCategories();
         isProcessing = false;
     }
 
-    private void LoadCategories()
+    private async Task LoadCategories()
     {
-        Categories = _categoryRepositery.GetAll();
-        // Logic to load categories would go here
-        // This is just a placeholder for demonstration purposes
+        Categories = await _categoryRepositery.GetAllAsync();
     }
 }

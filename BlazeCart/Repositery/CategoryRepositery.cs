@@ -1,5 +1,6 @@
 ﻿using BlazeCart.Data;
 using BlazeCart.Repositery.IRepositery;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazeCart.Repositery
 {
@@ -14,29 +15,29 @@ namespace BlazeCart.Repositery
             _db = db;
         }
 
-        public Category Create(Category obj)
+        public async Task<Category> CreateAsync(Category obj)
         {
-            _db.Categories.Add(obj);
-            _db.SaveChanges();
+            await _db.Categories.AddAsync(obj);
+            await _db.SaveChangesAsync();
             return obj;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var obj = _db.Categories.FirstOrDefault(c => c.Id == id);
+            var obj = await _db.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if(obj == null)
             {
                 return false; // Category not found
             }
             else {                 
                 _db.Categories.Remove(obj);
-                return _db.SaveChanges() > 0; // Save changes to the database and returns number of affected rows
+                return (await _db.SaveChangesAsync()) > 0; // Save changes to the database and returns number of affected rows
             }
         }
 
-        public Category Get(int id)
+        public async Task<Category> GetAsync(int id)
         {
-            var obj = _db.Categories.FirstOrDefault(c => c.Id == id);
+            var obj = await _db.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if(obj == null)
             {
                 return new Category(); // Category not found
@@ -47,14 +48,14 @@ namespace BlazeCart.Repositery
             }
         }
 
-        public IEnumerable<Category> GetAll()
+        public async Task<IEnumerable<Category>> GetAllAsync()
         {
-            return _db.Categories.ToList(); // Return all categories as a list
+            return await _db.Categories.ToListAsync(); // Return all categories as a list
         }
 
-        public Category Update(Category obj)
+        public async Task<Category> UpdateAsync(Category obj)
         {
-            var objFromDb = _db.Categories.FirstOrDefault(c => c.Id == obj.Id);
+            var objFromDb = await _db.Categories.FirstOrDefaultAsync(c => c.Id == obj.Id);
             if (objFromDb == null)
             {
                 return obj; // If the category is not found, return the original object
@@ -62,7 +63,7 @@ namespace BlazeCart.Repositery
             else
             {
                 objFromDb.Name = obj.Name; // Update the name or other properties as needed
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return objFromDb; // Return the updated category
             }
         }

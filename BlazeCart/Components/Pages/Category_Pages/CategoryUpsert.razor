@@ -1,0 +1,15 @@
+﻿@page "/category/create"
+@page "/category/update/{id:int}"
+
+<h3>CategoryUpsert </h3>
+
+
+    <h2>@Id</h2>
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    // means this is a Blazor component for upserting(update/insert) categories in a BlazeCart application.
+}

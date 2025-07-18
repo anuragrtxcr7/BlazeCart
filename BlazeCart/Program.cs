@@ -1,6 +1,8 @@
 using BlazeCart.Components;
 using BlazeCart.Components.Account;
 using BlazeCart.Data;
+using BlazeCart.Repositery;
+using BlazeCart.Repositery.IRepositery;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +14,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<ICategoryRepositery, CategoryRepositery>();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();

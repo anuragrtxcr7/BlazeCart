@@ -2,7 +2,11 @@
 @inject ICategoryRepositery _categoryRepositery
 @inject IJSRuntime _JS
 
-<BsModal></BsModal>
+<BsModal OnModalConfirmation="ConfirmDelete_Click"
+         ButtonBootstrapStyle="btn-danger"
+         ButtonText="Delete"
+         Title="Are you sure you want to delete this Category?">
+</BsModal>
 
 <h3>CategoryList</h3>
 
@@ -83,5 +87,26 @@ else
     {
         DeleteCategoryID = id;
         _JS.InvokeVoidAsync("ShowConfirmationModal");
+    }
+
+    private async Task ConfirmDelete_Click(bool isConfirmed)
+    {
+        isProcessing = true;
+        await _JS.InvokeVoidAsync("HideConfirmationModal");
+        if(isConfirmed && DeleteCategoryID > 0)
+        {
+            var result = await _categoryRepositery.DeleteAsync(DeleteCategoryID);
+            if (result) 
+            {
+                _JS?.ToastrSuccess("Category Delete Successfully");
+            }
+            else
+            {
+                _JS?.ToastrError("Error Encountered while deleting");
+            }
+            await LoadCategories();
+        }
+        DeleteCategoryID = 0;
+        isProcessing = false;
     }
 }

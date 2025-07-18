@@ -1,5 +1,8 @@
 ﻿@page "/category"
 @inject ICategoryRepositery _categoryRepositery
+@inject IJSRuntime _JS
+
+<Bs
 
 <h3>CategoryList</h3>
 
@@ -47,7 +50,7 @@ else
                                     <a href="@($"category/update/{obj.Id}")" class="btn btn-primary">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </a>
-                                    <button class="btn btn-danger">
+                                    <button class="btn btn-danger" @onclick="() => HandleDelete(obj.Id)">
                                         <i class="bi bi-trash3"></i> Delete
                                     </button>
                                 </td>
@@ -63,6 +66,7 @@ else
 @code {
     private bool isProcessing { get; set; } = true;
     private IEnumerable<Category> Categories { get; set; } = new List<Category>();
+    private int DeleteCategoryId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,5 +77,11 @@ else
     private async Task LoadCategories()
     {
         Categories = await _categoryRepositery.GetAllAsync();
+    }
+
+    public void HandleDelete(int Id)
+    {
+        DeleteCategoryId = Id; 
+        _JS.InvokeVoidAsync("ShowConfirmationModal");
     }
 }

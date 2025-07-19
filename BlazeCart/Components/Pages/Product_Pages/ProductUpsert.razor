@@ -1,8 +1,11 @@
 ﻿@page "/product/create"
 @page "/product/update/{id:int}"
+@inject ICategoryRepositery _categoryRepositery
 @inject IProductRepositery _productRepositery
-@inject NavigationManager _navigationManager
+
 @inject IJSRuntime _JS
+@inject NavigationManager _navigationManager
+
 
 @if (IsProcessing)
 {
@@ -27,8 +30,29 @@ else
                 <div class="border p-3 mt-4">
                     <div class="form-floating py-3 col-12">
                         <InputText @bind-Value="Product.Name" class="form-control" id="Name" placeholder="Name" />
-                        <label for="Name">Name</label>
+                        <label for="name">Name</label>
                         <ValidationMessage For="@(() => Product.Name)" />
+                    </div>
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Product.Description" class="form-control" id="Description" placeholder="Description" />
+                        <label for="description">Description</label>
+                        <ValidationMessage For="@(() => Product.Description)" />
+                    </div>
+                    <div class="form-floating py-3 col-12">
+                        <InputNumber @bind-Value="Product.Price" class="form-control" id="Price" placeholder="Price" />
+                        <label for="price">Price</label>
+                        <ValidationMessage For="@(() => Product.Price)" />
+                    </div>
+                    <div class="form-floating py-3 col-12">
+                        <InputSelect @bind-Value="Product.CategoryId" class="form-select" id="Category" placeholder="Category" >
+                            <option value="0" selected disabled> --Select Category-- </option>
+                            @foreach (var category in Categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        </InputSelect>
+                        <label for="category">Category</label>
+                        <ValidationMessage For="@(() => Product.Category)" />
                     </div>
                     <div class="row mt-3">
                         <div class="col-6 col-md-3">
@@ -49,7 +73,6 @@ else
         </div>
     </div>
 }
-     
 
 
 @code {
@@ -59,25 +82,24 @@ else
 
     private bool IsProcessing { get; set; } = true;
 
+    private IEnumerable<Category> Categories { get; set; } = new List<Category>();
+
     [SupplyParameterFromForm]
     private Product Product { get; set; } = new Product();
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadProduct();
+        await LoadProductAndCategoryList();
         IsProcessing = false;
     }
 
-    private async Task LoadProduct()
+    private async Task LoadProductAndCategoryList()
     {
         if (Id > 0)
         {
             Product = await _productRepositery.GetAsync(Id);
         }
-        else
-        {
-            Product = new Product();
-        }
+        Categories = await _categoryRepositery.GetAllAsync();
     }
 
     private async Task UpsertProduct()

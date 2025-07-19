@@ -50,7 +50,7 @@ namespace BlazeCart.Repositery
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            return await _db.Products.ToListAsync(); // Return all products as a list
+            return await _db.Products.Include(u => u.Category).ToListAsync(); // Return all products as a list
         }
 
         public async Task<Product> UpdateAsync(Product obj)

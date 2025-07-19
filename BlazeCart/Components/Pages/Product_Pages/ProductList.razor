@@ -41,6 +41,9 @@ else
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Special Tag</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -50,6 +53,15 @@ else
                             <tr>
                                 <td>
                                     @obj.Name
+                                </td>
+                                <td>
+                                    @obj.Category.Name
+                                </td>
+                                <td>
+                                    @obj.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)
+                                </td>
+                                <td>
+                                    @obj.SpecialTag
                                 </td>
                                 <td>
                                     <a href="@($"product/update/{obj.Id}")" class="btn btn-primary">

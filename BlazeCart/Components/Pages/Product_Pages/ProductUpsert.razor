@@ -44,6 +44,11 @@ else
                         <ValidationMessage For="@(() => Product.Price)" />
                     </div>
                     <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Product.SpecialTag" class="form-control" id="SpecialTag" placeholder="SpecialTag" />
+                        <label for="special tag">SpecialTag</label>
+                        <ValidationMessage For="@(() => Product.SpecialTag)" />
+                    </div>
+                    <div class="form-floating py-3 col-12">
                         <InputSelect @bind-Value="Product.CategoryId" class="form-select" id="Category" placeholder="Category" >
                             <option value="0" selected disabled> --Select Category-- </option>
                             @foreach (var category in Categories)

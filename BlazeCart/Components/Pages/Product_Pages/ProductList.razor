@@ -61,7 +61,9 @@ else
                                     @obj.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)
                                 </td>
                                 <td>
+                                    <span class="badge text-bg-info">
                                     @obj.SpecialTag
+                                    </span>
                                 </td>
                                 <td>
                                     <a href="@($"product/update/{obj.Id}")" class="btn btn-primary">

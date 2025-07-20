@@ -16,6 +16,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<ICategoryRepositery, CategoryRepositery>();
 builder.Services.AddScoped<IProductRepositery, ProductRepositery>();
+builder.Services.AddScoped<IShoppingCartRepositery, ShoppingCartRespositery>();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();

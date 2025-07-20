@@ -8,7 +8,7 @@ namespace BlazeCart.Data
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [Range(0.01, 1000)]
+        [Range(0.01, 1000000)]
         public decimal Price { get; set; }
         public string? Description { get; set; }
         public string? SpecialTag { get; set; }

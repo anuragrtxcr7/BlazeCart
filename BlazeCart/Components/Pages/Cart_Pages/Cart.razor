@@ -1,9 +1,11 @@
 ﻿@page "/cart"
+@using BlazeCart.Repositery
 @using BlazeCart.Utility
 @using Microsoft.AspNetCore.Authorization
 @using System.Globalization
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject IShoppingCartRepositery _cartRepositery
+@inject IOrderRepositery _orderRepositery
 @inject NavigationManager _navigationManager
 @attribute [Authorize]
 
@@ -155,6 +157,11 @@ else
 
     private async Task ProcessOrderCreation()
     {
+        IsProcessing = true;
+        await Task.Yield();
+        Order.OrderItems = SD.ConvertShoppingCartListToOrderItem(ShoppingCarts.ToList());
 
+        await _orderRepositery.CreateAsync(Order);
+        _navigationManager.NavigateTo($"/order/confirmation/{Order.Id}");
     }
 }

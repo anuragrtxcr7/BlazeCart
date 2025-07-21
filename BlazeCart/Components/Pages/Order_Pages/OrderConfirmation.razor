@@ -1,0 +1,41 @@
+﻿@page "/order/confirmation/{order_id}"
+
+@using BlazeCart.Services
+@using BlazeCart.Utility
+@inject IShoppingCartRepositery _shoppingCartRepositery
+
+@if (IsProcessing)
+{
+    <div class="position-absolute w-100 vh-100 d-flex flex-column align-items-center bg-white justify-content-center">
+        <img src="/images/loading.gif" alt="loading" />
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="pt-4 text-success">You are one stop closer to delicious food!</h1>
+        <p>Your order is confirmed! Please note your order ID for any questions. </p>
+        <p>Order ID: <b>@order.Id</b></p>
+        <hr />
+        <img src="/images/lawn_leaf.jpg" width="40%" />
+        <hr />
+    </div>
+
+}
+
+@code {
+    [Parameter]
+    public string order_id { get; set; }
+
+    private bool IsProcessing { get; set; } = true;
+    private Order order { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (order.Status == SD.StatusApproved)
+        {
+            await _shoppingCartRepositery.ClearCartAsync(order.UserId);
+        }
+        IsProcessing = false;
+    }
+}

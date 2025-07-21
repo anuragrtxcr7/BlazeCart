@@ -1,5 +1,6 @@
 ﻿@page "/cart"
 @using Microsoft.AspNetCore.Authorization
+@using System.Globalization
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject IShoppingCartRepositery _cartRepositery
 @inject NavigationManager _navigationManager
@@ -20,22 +21,23 @@ else
 					Cart Summary
 				</h4>
 
-
-				<div class="d-flex p-2 m-2">
-					<div class="card flex-row w-100">
-						<img class="card-img-left" style="width: 120px;">
+				@foreach (var cartItem in ShoppingCarts)
+				{
+					<div class="d-flex p-2 m-2">
+						<div class="card flex-row w-100">
+						<img class="card-img-left" style="width: 120px;" src="@cartItem.Product.ImageUrl">
 						<div class="card-body">
 							<div class="d-flex justify-content-between align-items-center">
 								<h4 class="">
-									--ProductName--
+									@cartItem.Product.Name
 								</h4>
 								<h4>
-									--PRICE--
+									@cartItem.Product.Price.ToString("C", CultureInfo.CurrentCulture);
 								</h4>
 							</div>
 							<div class="flex-fill">
 								<h4 class="text-danger">
-									--COUNT*PRICE--
+									@((cartItem.Product.Price * cartItem.Count).ToString("C", CultureInfo.CurrentCulture))));
 								</h4>
 							</div>
 							<div class="d-flex justify-content-between align-items-center">
@@ -44,7 +46,7 @@ else
 										<i class="bi bi-dash-circle-fill btn text-secondary"></i>
 									</span>
 									<span class="ml-1 me-1">
-										<b class="lead">--Count--</b>
+										<b class="lead">@cartItem.Count</b>
 									</span>
 									<span>
 										<i class="bi bi-plus-circle-fill btn text-secondary"></i>
@@ -53,9 +55,9 @@ else
 								<button class="btn btn-danger">Remove</button>
 							</div>
 						</div>
-					</div>
+					</div
 				</div>
-
+			}
 			</div>
 		</div>
 		<div class="col-lg-6 col-12 p-4">

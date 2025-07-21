@@ -153,7 +153,7 @@ else
         //if user is not authenticated then redirect to login
         if (!authenticated)
         {
-            _NavigationManager.NavigateTo("account/login");
+            _NavigationManager.NavigateTo("/Account/Login",true);
         }
         else
         {
@@ -171,5 +171,4 @@ else
             }
         }
     }
-
 }

@@ -31,5 +31,6 @@ namespace BlazeCart.Data
         public string PhoneNumber { get; set; }
 
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        // Navigation property for related OrderItems --> Doesnt add an extra column in the database
     }
 }

@@ -17,7 +17,7 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<ICategoryRepositery, CategoryRepositery>();
 builder.Services.AddScoped<IProductRepositery, ProductRepositery>();
 builder.Services.AddScoped<IShoppingCartRepositery, ShoppingCartRespositery>();
-//builder.Services.AddScoped<IOrderRepositery, OrderRespositery>();
+builder.Services.AddScoped<IOrderRepositery, OrderRepositery>();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();

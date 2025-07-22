@@ -32,7 +32,7 @@ namespace BlazeCart.Repositery
 
         public async Task<Order> GetAsync(int id)
         {
-            return await _db.Orders.Include(u => u.OrderItems).FirstOrDefaultAsync(u => u.Id == id);
+            return await _db.Orders.Include(u => u.OrderItems).ThenInclude(oi => oi.Product).FirstOrDefaultAsync(u => u.Id == id);
         }
 
 

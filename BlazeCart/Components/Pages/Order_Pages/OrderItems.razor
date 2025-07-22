@@ -1,5 +1,106 @@
-﻿<h3>OrderItems</h3>
+﻿@page "/order/items/{Id:int}"
+@using BlazeCart.Utility
+@inject IOrderRepositery OrderRepositery
+@inject IJSRuntime? _JS
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+
+@if (IsProcessing)
+{
+    <div class="position-absolute w-100 vh-100 d-flex flex-column align-items-center bg-white justify-content-center">
+        <img src="/images/loading.gif" alt="loading" />
+    </div>
+}
+else
+{
+    <div class="container my-5 mx-auto p-5 w-100" style="max-width: 950px;">
+        <div class="card" style="max-width: 750px;">
+            <div class="pt-3 text-success text-center">
+                <span class="h4"> ORDER ITEMS</span>
+            </div>
+
+            <hr />
+            <div class="px-3">
+                <p>Order Id: @Order.Id</p>
+                <p>Name: @Order.Name </p>
+                <p>Phone: @Order.PhoneNumber </p>
+                <p>Order Status: @Order.Status </p>
+            </div>
+            <hr />
+            <div class="card-body">
+                <h4 class="text-success">Menu Items</h4>
+
+                @foreach (var item in Order.OrderItems)
+                {
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex">
+                            <img src="@item.Product.ImageUrl" alt="@item.Product.Name" style="width: 80px; height: 80px;" class="me-3">
+                            <div>
+                                <h5>@item.Product.Name</h5>
+                                <p>Price: @item.Product.Price.ToString("C")</p>
+                                <p>Count: @item.Count</p>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <h5>Total: @((item.Product.Price * item.Count).ToString("C"))</h5>
+                        </div>
+                    </div>
+                }
+                <hr />
+                <h4 class="text-success text-end">
+                    Order Total : @Order.OrderTotal.ToString("C")
+                </h4>
+                <hr />
+
+                <div class="row">
+                    <div class="col-5">
+                        <a href="order/list" class="btn btn-secondary  m-2 p-2" style="width:150px;">Back to Orders</a>
+                    </div>
+                    <div class="col-7 text-end">
+                        @if (Order.Status != SD.StatusCancelled && Order.Status != SD.StatusCompleted
+                                            && _AuthenticationStateProvider.GetAuthenticationStateAsync().GetAwaiter().GetResult().User?.IsInRole(SD.Role_Admin) == true
+                                            )
+                        {
+                            <button class="btn btn-danger m-2 p-2" @onclick="() => UpdateStatus(SD.StatusCancelled)" style="width:150px;">Cancel Order</button>
+
+                            @if (Order.Status == SD.StatusPending)
+                            {
+                                <button class="btn btn-primary m-2 p-2" @onclick="() => UpdateStatus(SD.StatusReadyForPickUp)" style="width:150px;">Ready for Pickup</button>
+                            }
+                            @if (Order.Status == SD.StatusReadyForPickUp)
+                            {
+                                <button class="btn btn-success m-2 p-2" @onclick="() => UpdateStatus(SD.StatusCompleted)" style="width:150px;">Completed</button>
+                            }
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
+    private bool IsProcessing = true;
 
+    [Parameter]
+    public int Id { get; set; }
+    private Order? Order = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadOrder();
+        IsProcessing = false;
+    }
+
+    private async Task LoadOrder()
+    {
+        Order = await OrderRepositery.GetAsync(Id);
+    }
+
+    private async Task UpdateStatus(string newStatus)
+    {
+        await OrderRepositery.UpdateStatusAsync(Id, newStatus, "");
+        _JS?.ToastrSuccess("Status updated successfully to " + newStatus);
+        LoadOrder();
+    }
 }

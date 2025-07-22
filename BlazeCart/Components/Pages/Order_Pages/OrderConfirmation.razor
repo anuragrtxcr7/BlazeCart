@@ -15,7 +15,7 @@ else
     <div class="text-center">
         <h1 class="pt-4 text-success">You are one stop closer to delicious food!</h1>
         <p>Your order is confirmed! Please note your order ID for any questions. </p>
-        <p>Order ID: <b>@order.Id</b></p>
+        <p>Order ID: <b>@order_id</b></p>
         <hr />
         <img src="/images/lawn_leaf.jpg" width="40%" />
         <hr />
@@ -32,10 +32,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (order.Status == SD.StatusApproved)
-        {
-            await _shoppingCartRepositery.ClearCartAsync(order.UserId);
-        }
-        IsProcessing = false;
+        // if (order.Status == SD.StatusApproved)
+        // {
+            // await _shoppingCartRepositery.ClearCartAsync(order.UserId);
+        // }
+        IsProcessing = false;   
     }
 }

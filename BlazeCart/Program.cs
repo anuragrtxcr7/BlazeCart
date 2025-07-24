@@ -5,7 +5,9 @@ using BlazeCart.Repositery;
 using BlazeCart.Repositery.IRepositery;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +18,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<ICategoryRepositery, CategoryRepositery>();
 builder.Services.AddScoped<IProductRepositery, ProductRepositery>();
-builder.Services.AddScoped<IShoppingCartRepositery, ShoppingCartRespositery>();
+builder.Services.AddScoped<IShoppingCartRepositery, ShoppingCartRepositery>();
 builder.Services.AddScoped<IOrderRepositery, OrderRepositery>();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
@@ -32,6 +34,8 @@ builder.Services.AddAuthentication(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.AddScoped<IDbConnection>(sp =>
+    new SqlConnection(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)

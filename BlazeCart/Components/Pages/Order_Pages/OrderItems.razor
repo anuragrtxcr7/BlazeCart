@@ -101,6 +101,6 @@ else
     {
         await OrderRepositery.UpdateStatusAsync(Id, newStatus, "");
         _JS?.ToastrSuccess("Status updated successfully to " + newStatus);
-        LoadOrder();
+        await LoadOrder();
     }
 }

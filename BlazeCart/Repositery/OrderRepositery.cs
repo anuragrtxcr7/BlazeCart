@@ -26,6 +26,7 @@ namespace BlazeCart.Repositery
             var sql = @"INSERT INTO Orders (UserId, OrderTotal, OrderDate, Status, Name, PhoneNumber)
                         VALUES (@UserId, @OrderTotal, @OrderDate, @Status, @Name, @PhoneNumber);
                         SELECT CAST(SCOPE_IDENTITY() as int);";
+            // SELECT CAST(SCOPE_IDENTITY() as int) statement is used to get the last inserted ID in SQL Server.
 
             orderHeader.OrderDate = DateTime.Now;
             orderHeader.Id = await _db.ExecuteScalarAsync<int>(sql, orderHeader);
@@ -74,10 +75,12 @@ namespace BlazeCart.Repositery
             var order = await _db.QueryFirstOrDefaultAsync<Order>(orderSql, new { Id = id });
             if (order == null) return null;
 
-            var itemSql = @"SELECT oi.*, p.* 
+            var itemSql = @"SELECT oi.*, p.*  
                             FROM OrderItems oi
                             INNER JOIN Products p ON oi.ProductId = p.Id
                             WHERE oi.OrderId = @OrderId";
+            // @ is added at the start @"Select" so that we can use multi-line strings in C#.
+            // otherwise, we would have to use \n for new lines or + to concatenate strings.
 
             var orderItems = new List<OrderItem>();
 

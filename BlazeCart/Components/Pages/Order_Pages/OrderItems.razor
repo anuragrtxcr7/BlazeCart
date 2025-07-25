@@ -1,5 +1,6 @@
 ﻿@page "/order/items/{Id:int}"
 @using BlazeCart.Utility
+@using System.Globalization
 @inject IOrderRepositery OrderRepositery
 @inject IJSRuntime? _JS
 @inject AuthenticationStateProvider _AuthenticationStateProvider
@@ -36,18 +37,18 @@ else
                             <img src="@item.Product.ImageUrl" alt="@item.Product.Name" style="width: 80px; height: 80px;" class="me-3">
                             <div>
                                 <h5>@item.Product.Name</h5>
-                                <p>Price: @item.Product.Price.ToString("C")</p>
+                                <p>Price: @item.Product.Price.ToString("C", new CultureInfo("en-IN"))</p>
                                 <p>Count: @item.Count</p>
                             </div>
                         </div>
                         <div class="text-end">
-                            <h5>Total: @((item.Product.Price * item.Count).ToString("C"))</h5>
+                            <h5>Total: @((item.Product.Price * item.Count).ToString("C", new CultureInfo("en-IN")))</h5>
                         </div>
                     </div>
                 }
                 <hr />
                 <h4 class="text-success text-end">
-                    Order Total : @Order.OrderTotal.ToString("C")
+                    Order Total : @Order.OrderTotal.ToString("C", new CultureInfo("en-IN"))
                 </h4>
                 <hr />
 

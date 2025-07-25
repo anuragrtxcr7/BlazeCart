@@ -1,4 +1,5 @@
 ﻿@page "/product"
+@using System.Globalization
 @inject IProductRepositery _productRepositery
 @inject ICategoryRepositery _categoryRepositery
 @inject IJSRuntime _JS
@@ -58,7 +59,7 @@ else
                                     @obj.Category.Name
                                 </td>
                                 <td>
-                                    @obj.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)
+                                    @obj.Price.ToString("C", new CultureInfo("en-IN"))
                                 </td>
                                 <td>
                                     <span class="badge text-bg-info">

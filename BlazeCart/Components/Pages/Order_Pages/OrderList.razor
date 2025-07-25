@@ -3,6 +3,7 @@
 @using System.Security.Claims
 @using BlazeCart.Utility
 @using Microsoft.AspNetCore.Authorization
+@using System.Globalization
 @attribute [Authorize]
 
 @inject IOrderRepositery OrderRepositery
@@ -46,7 +47,7 @@ else
                                 <td>@obj.Id</td>
                                 <td>@obj.Name</td>
                                 <td>@obj.PhoneNumber</td>
-                                <td>@obj.OrderTotal.ToString("C")</td>
+                                <td>@obj.OrderTotal.ToString("C", new CultureInfo("en-IN"))</td>
                                 <td>@obj.OrderDate</td>
                                 <td>@obj.Status</td>
                                 <td>

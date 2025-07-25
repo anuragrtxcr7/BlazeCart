@@ -14,12 +14,6 @@ namespace BlazeCart.Repositery
             _db = db;
         }
 
-        //        private readonly ApplicationDbContext _db;
-        //        public ShoppingCartRespositery(ApplicationDbContext db)
-        //        {
-        //            _db = db;
-        //        }
-
         public async Task<IEnumerable<ShoppingCart>> GetAllAsync(string? userId)
         {
             var sql = @"SELECT sc.*, p.*  
@@ -46,10 +40,6 @@ namespace BlazeCart.Repositery
 
             return cartDict.Values;
         }
-        //        public async Task<IEnumerable<ShoppingCart>> GetAllAsync(string? userId)
-        //        {
-        //            return await _db.ShoppingCart.Where(u => u.UserId == userId).Include(u => u.Product).ToListAsync();
-        //        }
 
         public async Task<bool> UpdateCartAsync(string userId, int productId, int updateBy)
         {
@@ -84,36 +74,6 @@ namespace BlazeCart.Repositery
                 }
             }
         }
-        //        public async Task<bool> UpdateCartAsync(string userId, int productId, int updateBy)
-        //        {
-        //            if (string.IsNullOrEmpty(userId))
-        //            {
-        //                return false;
-        //            }
-
-        //            var cart = await _db.ShoppingCart.FirstOrDefaultAsync(u => u.UserId == userId && u.ProductId == productId);
-        //            if (cart == null)
-        //            {
-        //                cart = new ShoppingCart
-        //                {
-        //                    UserId = userId,
-        //                    ProductId = productId,
-        //                    Count = updateBy
-        //                };
-
-        //                await _db.ShoppingCart.AddAsync(cart);
-        //            }
-        //            else
-        //            {
-        //                cart.Count += updateBy;
-        //                if (cart.Count <= 0)
-        //                {
-        //                    _db.ShoppingCart.Remove(cart);
-        //                }
-        //            }
-        //            return await _db.SaveChangesAsync() > 0;
-        //        }
-        //    }
 
         public async Task<bool> ClearCartAsync(string? userId)
         {
@@ -121,11 +81,56 @@ namespace BlazeCart.Repositery
             var rows = await _db.ExecuteAsync(sql, new { UserId = userId });
             return rows > 0;
         }
-        //        public async Task<bool> ClearCartAsync(string? userId)
-        //        {
-        //            var cartItems = await _db.ShoppingCart.Where(u => u.UserId == userId).ToListAsync();
-        //            _db.ShoppingCart.RemoveRange(cartItems);
-        //            return await _db.SaveChangesAsync() > 0;
-        //        }
     }
 }
+
+// If you were to use Entity Framework, the code would look like this:
+
+//        private readonly ApplicationDbContext _db;
+//        public ShoppingCartRespositery(ApplicationDbContext db)
+//        {
+//            _db = db;
+//        }
+
+//        public async Task<IEnumerable<ShoppingCart>> GetAllAsync(string? userId)
+//        {
+//            return await _db.ShoppingCart.Where(u => u.UserId == userId).Include(u => u.Product).ToListAsync();
+//        }
+
+//        public async Task<bool> UpdateCartAsync(string userId, int productId, int updateBy)
+//        {
+//            if (string.IsNullOrEmpty(userId))
+//            {
+//                return false;
+//            }
+
+//            var cart = await _db.ShoppingCart.FirstOrDefaultAsync(u => u.UserId == userId && u.ProductId == productId);
+//            if (cart == null)
+//            {
+//                cart = new ShoppingCart
+//                {
+//                    UserId = userId,
+//                    ProductId = productId,
+//                    Count = updateBy
+//                };
+
+//                await _db.ShoppingCart.AddAsync(cart);
+//            }
+//            else
+//            {
+//                cart.Count += updateBy;
+//                if (cart.Count <= 0)
+//                {
+//                    _db.ShoppingCart.Remove(cart);
+//                }
+//            }
+//            return await _db.SaveChangesAsync() > 0;
+//        }
+//    }
+
+//        public async Task<bool> ClearCartAsync(string? userId)
+//        {
+//            var cartItems = await _db.ShoppingCart.Where(u => u.UserId == userId).ToListAsync();
+//            _db.ShoppingCart.RemoveRange(cartItems);
+//            return await _db.SaveChangesAsync() > 0;
+//        }

@@ -1,4 +1,58 @@
-﻿//using BlazeCart.Data;
+﻿using BlazeCart.Data;
+using BlazeCart.Repositery.IRepositery;
+using System.Data;
+using Dapper;
+
+namespace BlazeCart.Repositery
+{
+    public class CategoryRepositery : ICategoryRepositery
+    {
+        private readonly IDbConnection _db;
+
+        public CategoryRepositery(IDbConnection db)
+        {
+            _db = db;
+        }
+
+        public async Task<Category> CreateAsync(Category obj)
+        {
+            var sql = "INSERT INTO Categories (Name) VALUES (@Name); SELECT CAST(SCOPE_IDENTITY() as int);";
+            var id = await _db.ExecuteScalarAsync<int>(sql, obj);
+            obj.Id = id;
+            return obj;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var sql = "DELETE FROM Categories WHERE Id = @Id";
+            var rowsAffected = await _db.ExecuteAsync(sql, new { Id = id });
+            return rowsAffected > 0;
+        }
+
+        public async Task<Category> GetAsync(int id)
+        {
+            var sql = "SELECT * FROM Categories WHERE Id = @Id";
+            return await _db.QueryFirstOrDefaultAsync<Category>(sql, new { Id = id }) ?? new Category();
+        }
+
+        public async Task<IEnumerable<Category>> GetAllAsync()
+        {
+            var sql = "SELECT * FROM Categories";
+            return await _db.QueryAsync<Category>(sql);
+        }
+
+        public async Task<Category> UpdateAsync(Category obj)
+        {
+            var sql = "UPDATE Categories SET Name = @Name WHERE Id = @Id";
+            await _db.ExecuteAsync(sql, obj);
+            return obj;
+        }
+    }
+}
+
+// With Entity Framework, the code would look like this:
+
+//using BlazeCart.Data;
 //using BlazeCart.Repositery.IRepositery;
 //using Microsoft.EntityFrameworkCore;
 
@@ -70,54 +124,3 @@
 //    }
 //}
 
-using BlazeCart.Data;
-using BlazeCart.Repositery.IRepositery;
-using System.Data;
-using Dapper;
-
-namespace BlazeCart.Repositery
-{
-    public class CategoryRepositery : ICategoryRepositery
-    {
-        private readonly IDbConnection _db;
-
-        public CategoryRepositery(IDbConnection db)
-        {
-            _db = db;
-        }
-
-        public async Task<Category> CreateAsync(Category obj)
-        {
-            var sql = "INSERT INTO Categories (Name) VALUES (@Name); SELECT CAST(SCOPE_IDENTITY() as int);";
-            var id = await _db.ExecuteScalarAsync<int>(sql, obj);
-            obj.Id = id;
-            return obj;
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var sql = "DELETE FROM Categories WHERE Id = @Id";
-            var rowsAffected = await _db.ExecuteAsync(sql, new { Id = id });
-            return rowsAffected > 0;
-        }
-
-        public async Task<Category> GetAsync(int id)
-        {
-            var sql = "SELECT * FROM Categories WHERE Id = @Id";
-            return await _db.QueryFirstOrDefaultAsync<Category>(sql, new { Id = id }) ?? new Category();
-        }
-
-        public async Task<IEnumerable<Category>> GetAllAsync()
-        {
-            var sql = "SELECT * FROM Categories";
-            return await _db.QueryAsync<Category>(sql);
-        }
-
-        public async Task<Category> UpdateAsync(Category obj)
-        {
-            var sql = "UPDATE Categories SET Name = @Name WHERE Id = @Id";
-            await _db.ExecuteAsync(sql, obj);
-            return obj;
-        }
-    }
-}

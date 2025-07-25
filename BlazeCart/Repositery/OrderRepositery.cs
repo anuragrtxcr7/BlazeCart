@@ -9,17 +9,12 @@ namespace BlazeCart.Repositery
     public class OrderRepositery : IOrderRepositery
     {
         private readonly IDbConnection _db;
-        //        private readonly ApplicationDbContext _db;
-        //--> For entity framework, but here we are using Dapper
 
         public OrderRepositery(IDbConnection db)
         {
             _db = db;
         }
-        //        public OrderRepositery(ApplicationDbContext db)
-        //        {
-        //            _db = db;
-        //        }
+
 
         public async Task<Order> CreateAsync(Order orderHeader)
         {
@@ -43,13 +38,6 @@ namespace BlazeCart.Repositery
 
             return orderHeader;
         }
-        //        public async Task<Order> CreateAsync(Order order)
-        //        {
-        //            order.OrderDate = DateTime.Now;
-        //            await _db.Orders.AddAsync(order);
-        //            await _db.SaveChangesAsync();
-        //            return order;
-        //        }
 
         public async Task<IEnumerable<Order>> GetAllAsync(string? userId = null)
         {
@@ -59,15 +47,6 @@ namespace BlazeCart.Repositery
 
             return await _db.QueryAsync<Order>(sql, new { UserId = userId });
         }
-        //        public async Task<IEnumerable<Order>> GetAllAsync(string? userId = null)
-        //        {
-        //            if (!string.IsNullOrEmpty(userId))
-        //            {
-        //                return await _db.Orders.Where(u => u.UserId == userId).ToListAsync();
-        //            }
-        //            return await _db.Orders.ToListAsync();
-        //        }
-
 
         public async Task<Order?> GetAsync(int id)
         {
@@ -103,10 +82,7 @@ namespace BlazeCart.Repositery
             order.OrderItems = lookup.Values.ToList();
             return order;
         }
-        //        public async Task<Order> GetAsync(int id)
-        //        {
-        //            return await _db.Orders.Include(u => u.OrderItems).ThenInclude(oi => oi.Product).FirstOrDefaultAsync(u => u.Id == id);
-        //        }
+
 
         public async Task<Order> UpdateStatusAsync(int orderId, string status, string paymentIntentId)
         {
@@ -116,15 +92,44 @@ namespace BlazeCart.Repositery
             var updatedOrder = await GetAsync(orderId);
             return updatedOrder!;
         }
-        //        public async Task<Order> UpdateStatusAsync(int orderId, string status, string paymentIntentId)
-        //        {
-        //            var order = _db.Orders.FirstOrDefault(u => u.Id == orderId);
-        //            if (order != null)
-        //            {
-        //                order.Status = status;
-        //                await _db.SaveChangesAsync();
-        //            }
-        //            return order;
-        //        }
     }
 }
+
+//        private readonly ApplicationDbContext _db;
+//        public OrderRepositery(ApplicationDbContext db)
+//        {
+//            _db = db;
+//        }
+
+//        public async Task<Order> CreateAsync(Order order)
+//        {
+//            order.OrderDate = DateTime.Now;
+//            await _db.Orders.AddAsync(order);
+//            await _db.SaveChangesAsync();
+//            return order;
+//        }
+
+//        public async Task<IEnumerable<Order>> GetAllAsync(string? userId = null)
+//        {
+//            if (!string.IsNullOrEmpty(userId))
+//            {
+//                return await _db.Orders.Where(u => u.UserId == userId).ToListAsync();
+//            }
+//            return await _db.Orders.ToListAsync();
+//        }
+
+//        public async Task<Order> GetAsync(int id)
+//        {
+//            return await _db.Orders.Include(u => u.OrderItems).ThenInclude(oi => oi.Product).FirstOrDefaultAsync(u => u.Id == id);
+//        }
+
+//        public async Task<Order> UpdateStatusAsync(int orderId, string status, string paymentIntentId)
+//        {
+//            var order = _db.Orders.FirstOrDefault(u => u.Id == orderId);
+//            if (order != null)
+//            {
+//                order.Status = status;
+//                await _db.SaveChangesAsync();
+//            }
+//            return order;
+//        }
